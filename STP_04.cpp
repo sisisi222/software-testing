@@ -243,7 +243,7 @@ bool duplicateEmail(vector<Student> &students, string email) {
 
 // Checks for valid grade input
 bool validateGrade(int input) {
-  if (input < 0 && input > 4) {
+  if (input < 0 || input > 4) {
     return false;
   }
 
