@@ -259,7 +259,7 @@ bool addStudent(vector<Student> &students) {
   while (true) {
     cout << "Name: ";
     getline(cin, name);
-    if (validateName(name)) {
+    if (!validateName(name)) {
       cout << "Invalid Name. Please enter a valid name."
            << "\n";
       continue;
