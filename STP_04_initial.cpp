@@ -63,44 +63,55 @@ public:
   }
 };
 
-
+// Reads from studentsInfo.csv
 bool readFile(vector<Student> &students, string fileName) {
-    ifstream fin;
-    fin.open(fileName);
-    string line, temp;
-    int lineNum = 0;
+  ifstream fin;
+  fin.open(fileName);
+  string line, temp;
+  int lineNum = 0;
 
-    getline(fin, line); // Skip header
-    while (getline(fin, line)) {
-        stringstream ss(line);
-        vector<string> row;
+  getline(fin, line);
+  while (fin.good()) {
 
-        while (getline(ss, temp, ',')) {
-            row.push_back(temp); 
-        }
-
-        if (row.size() != 6) {
-            cout << "Incorrect number of fields in line " << lineNum + 1 << ": " << line << "\\n";
-            return false;
-        }
-
-        try {
-            Student newStudent(row[0], row[1], row[2], stoi(row[3]), stoi(row[4]), stoi(row[5]));
-            students.push_back(newStudent);
-        } catch (const std::invalid_argument &e) {
-            cout << "Invalid argument in line " << lineNum + 1 << ": " << line << "\\n";
-            return false;
-        } catch (const std::out_of_range &e) {
-            cout << "Out of range error in line " << lineNum + 1 << ": " << line << "\\n";
-            return false;
-        }
-
-        lineNum++;
+    // Handles when a student entry has too many fields
+    if (count(line.begin(), line.end(), ',') > 5) {
+      cout << "There are too many fields in line " << lineNum + 1 << ". It has "
+           << count(line.begin(), line.end(), ',') + 1
+           << ", but only 5 are permitted."
+           << "\n"
+           << line << "\n";
+      return false;
     }
 
-    fin.close();
+    // Handles when a student has too little fields
+    if (count(line.begin(), line.end(), ',') < 5) {
+      cout << "There are too little fields in line " << lineNum + 1
+           << ". It has " << count(line.begin(), line.end(), ',') + 1
+           << ", but at least 5 are required."
+           << "\n"
+           << line << "\n";
+      return false;
+    }
 
-    return true;
+    stringstream ss(line);
+    vector<string> row;
+
+    while (ss.good()) {
+      getline(ss, temp);
+      row.push_back(temp);
+    }
+
+    Student newStudent(row[0], row[1], row[2], stoi(row[3]), stoi(row[4]),
+                       stoi(row[5]));
+    students.push_back(newStudent);
+
+    lineNum++;
+    getline(fin, line);
+  }
+
+  fin.close();
+
+  return true;
 }
 
 // Writes to studentsInfo.csv
@@ -108,10 +119,6 @@ bool writeFile(vector<Student> &students, string fileName) {
   ofstream fout;
   fout.open(fileName);
 
-  // Write header line
-  fout << "Name,ID,Email,Presentation,Essay,Term Project\n";
-
-  // Write student data
   for (Student student : students) {
     fout << student.getName() << "," << student.getUID() << ","
          << student.getEmail() << "," << student.getPresentationGrade() << ","
@@ -122,7 +129,6 @@ bool writeFile(vector<Student> &students, string fileName) {
 
   return true;
 }
-
 
 // Searches for a student by name
 int searchStudentByName(vector<Student> &students, string name) {
@@ -139,7 +145,7 @@ int searchStudentByName(vector<Student> &students, string name) {
 int searchStudentByUID(vector<Student> &students, string uid) {
   for (int i = 0; i < students.size(); i++) {
     if (students[i].getUID() == uid) {
-      return i;
+      return 1;
     }
   }
 
@@ -174,8 +180,8 @@ bool validateName(string input) {
 
 // Checks for valid UID input
 bool validateUID(string input) {
-  if (input.size() != 10) {
-    cout << "UID must be exactly 10 characters."
+  if (input.size() != 9) {
+    cout << "UID must be exactly 9 characters."
          << "\n";
     return false;
   }
@@ -191,7 +197,7 @@ bool validateUID(string input) {
 
 // Checks for duplicate UID input
 bool duplicateUID(vector<Student> &students, string uid) {
-  if (searchStudentByUID(students, uid) == 1) {
+  if (searchStudentByUID(students, uid) == -1) {
     cout << "Duplicate UID, please input a new UID."
          << "\n";
     return true;
@@ -237,7 +243,7 @@ bool duplicateEmail(vector<Student> &students, string email) {
 
 // Checks for valid grade input
 bool validateGrade(int input) {
-  if (input < 0 || input > 4) {
+  if (input < 0 && input > 4) {
     return false;
   }
 
@@ -253,7 +259,7 @@ bool addStudent(vector<Student> &students) {
   while (true) {
     cout << "Name: ";
     getline(cin, name);
-    if (!validateName(name)) {
+    if (validateName(name)) {
       cout << "Invalid Name. Please enter a valid name."
            << "\n";
       continue;
@@ -549,7 +555,6 @@ bool updateStudentInfo(vector<Student> students) {
     }
     }
   }
-  writeFile(students, "studentsInfo.csv");
 
   return true;
 }
