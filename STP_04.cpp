@@ -174,8 +174,8 @@ bool validateName(string input) {
 
 // Checks for valid UID input
 bool validateUID(string input) {
-  if (input.size() != 10) {
-    cout << "UID must be exactly 10 characters."
+  if (input.size() != 9) {
+    cout << "UID must be exactly 9 characters."
          << "\n";
     return false;
   }
