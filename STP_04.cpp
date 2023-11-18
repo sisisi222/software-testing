@@ -191,7 +191,7 @@ bool validateUID(string input) {
 
 // Checks for duplicate UID input
 bool duplicateUID(vector<Student> &students, string uid) {
-  if (searchStudentByUID(students, uid) == 1) {
+  if (searchStudentByUID(students, uid) != -1) {
     cout << "Duplicate UID, please input a new UID."
          << "\n";
     return true;
