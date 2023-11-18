@@ -244,6 +244,19 @@ bool validateGrade(int input) {
   return true;
 }
 
+bool isInteger(const std::string &input) {
+    std::istringstream iss(input);
+    int number;
+    char extraChar;
+
+    // Try to extract an integer and check if there are no extra characters
+    if (iss >> number && !(iss >> extraChar)) {
+        return true;
+    }
+
+    return false;
+}
+
 // Adds new student to StudentsInfo.csv
 bool addStudent(vector<Student> &students) {
   string name, uid, email;
@@ -282,21 +295,50 @@ bool addStudent(vector<Student> &students) {
       break;
     }
   }
-
   while (true) {
-    cout << "Presentation Grade: ";
-    cin >> presentationGrade;
-    if (!validateGrade(presentationGrade)) {
-      cout << "Invalid grade. Please enter a valid grade."
-           << "\n";
-      continue;
+    std::string input;
+    std::cout << "Presentation Grade: ";
+    std::cin >> input;
+
+    if (!isInteger(input)) {
+        std::cout << "Invalid input. Please enter a valid integer."
+                  << "\n";
+        // Clear the input buffer to handle invalid input
+        std::cin.clear();
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        continue;
     }
+
+    // Convert the valid input to an integer
+    std::istringstream iss(input);
+    iss >> presentationGrade;
+
+    if (!validateGrade(presentationGrade)) {
+        std::cout << "Invalid grade. Please enter a valid grade."
+                  << "\n";
+        continue;
+    }
+
     break;
   }
 
   while (true) {
-    cout << "Essay Grade: ";
-    cin >> essayGrade;
+    std::string input;
+    std::cout << "Essay Grade: ";
+    std::cin >> input;
+
+    if (!isInteger(input)) {
+        std::cout << "Invalid input. Please enter a valid integer."
+                  << "\n";
+        // Clear the input buffer to handle invalid input
+        std::cin.clear();
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        continue;
+    }
+
+    // Convert the valid input to an integer
+    std::istringstream iss(input);
+    iss >> essayGrade;
     if (!validateGrade(essayGrade)) {
       cout << "Invalid grade. Please enter a valid grade."
            << "\n";
@@ -306,8 +348,22 @@ bool addStudent(vector<Student> &students) {
   }
 
   while (true) {
-    cout << "Project Grade: ";
-    cin >> projectGrade;
+    std::string input;
+    std::cout << "Project Grade: ";
+    std::cin >> input;
+
+    if (!isInteger(input)) {
+        std::cout << "Invalid input. Please enter a valid integer."
+                  << "\n";
+        // Clear the input buffer to handle invalid input
+        std::cin.clear();
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        continue;
+    }
+
+    // Convert the valid input to an integer
+    std::istringstream iss(input);
+    iss >> projectGrade;
     if (!validateGrade(projectGrade)) {
       cout << "Invalid grade. Please enter a valid grade."
            << "\n";
