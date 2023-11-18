@@ -427,7 +427,7 @@ void displayUpdateMenu() {
 }
 
 // Updates student in studentsInfo.csv
-bool updateStudentInfo(vector<Student> students) {
+bool updateStudentInfo(vector<Student> &students) {
   string UpdateUID;
 
   cout << "Please enter the UID of the student you want to update: ";
@@ -537,8 +537,22 @@ bool updateStudentInfo(vector<Student> students) {
       bool isGradeValid = false;
 
       while (!isGradeValid) {
-        cout << "Please input the updated presentation grade: ";
-        cin >> updatedPresentationGrade;
+        std::string input;
+        std::cout << "Please input the updated presentation grade: ";
+        std::cin >> input;
+
+        if (!isInteger(input)) {
+            std::cout << "Invalid input. Please enter a valid integer."
+                      << "\n";
+            // Clear the input buffer to handle invalid input
+            std::cin.clear();
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            continue;
+        }
+
+        // Convert the valid input to an integer
+        std::istringstream iss(input);
+        iss >> updatedPresentationGrade;
 
         if (!validateGrade(updatedPresentationGrade)) {
           cout << "Invalid grade. Please provide a valid grade."
@@ -557,8 +571,22 @@ bool updateStudentInfo(vector<Student> students) {
       bool isGradeValid = false;
 
       while (!isGradeValid) {
-        cout << "Please enter the updated essay grade: ";
-        cin >> updatedEssayGrade;
+        std::string input;
+        std::cout << "Please enter the updated essay grade: ";
+        std::cin >> input;
+
+        if (!isInteger(input)) {
+            std::cout << "Invalid input. Please enter a valid integer."
+                      << "\n";
+            // Clear the input buffer to handle invalid input
+            std::cin.clear();
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            continue;
+        }
+
+        // Convert the valid input to an integer
+        std::istringstream iss(input);
+        iss >> updatedEssayGrade;
 
         if (!validateGrade(updatedEssayGrade)) {
           cout << "Invalid grade. Please provide a valid grade."
@@ -577,8 +605,22 @@ bool updateStudentInfo(vector<Student> students) {
       bool isGradeValid = false;
 
       while (!isGradeValid) {
-        cout << "Please input the updated project grade: ";
-        cin >> updatedProjectGrade;
+        std::string input;
+        std::cout << "Please enter the updated project grade: ";
+        std::cin >> input;
+
+        if (!isInteger(input)) {
+            std::cout << "Invalid input. Please enter a valid integer."
+                      << "\n";
+            // Clear the input buffer to handle invalid input
+            std::cin.clear();
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            continue;
+        }
+
+        // Convert the valid input to an integer
+        std::istringstream iss(input);
+        iss >> updatedProjectGrade;
 
         if (!validateGrade(updatedProjectGrade)) {
           cout << "Invalid grade. Please provide a valid grade."
