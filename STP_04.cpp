@@ -591,6 +591,13 @@ int main() {
     displayMainMenu();
 
     cin >> choice;
+    if (!cin){
+      cin.clear(); // clear any error flags
+      cin.ignore(numeric_limits<streamsize>::max(), '\n'); 
+      cout << "Invalid input. Please enter a number.\n";
+      continue;
+    }
+
 
     switch (choice) {
     case 1: { // Adds a new student to studentsInfo.csv
