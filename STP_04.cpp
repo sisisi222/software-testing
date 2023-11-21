@@ -6,6 +6,8 @@
 #include <sstream>
 #include <string>
 #include <vector>
+#include <chrono>
+
 using namespace std;
 
 // Student object to store in studentsInfo.csv
@@ -27,29 +29,29 @@ public:
         _projectGrade(projectGrade){};
 
   // Getter and setter for student name
-  string getName() { return _name; }
+  string getName() const { return _name; }
   void setName(string name) { _name = name; }
 
   // Getter and setter for student UID
-  string getUID() { return _uid; }
+  string getUID() const { return _uid; }
   void setUID(string uid) { _uid = uid; }
 
   // Getter and setter for student email
-  string getEmail() { return _email; }
+  string getEmail() const { return _email; }
   void setEmail(string email) { _email = email; }
 
   // Getter and setter for student presentation grade
-  int getPresentationGrade() { return _presentationGrade; }
+  int getPresentationGrade() const { return _presentationGrade; }
   void setPresentationGrade(int presentationGrade) {
     _presentationGrade = presentationGrade;
   }
 
   // Getter and setter for student essay grade
-  int getEssayGrade() { return _essayGrade; }
+  int getEssayGrade() const { return _essayGrade; }
   void setEssayGrade(int essayGrade) { _essayGrade = essayGrade; }
 
   // Getter and setter for student project grade
-  int getProjectGrade() { return _projectGrade; }
+  int getProjectGrade() const { return _projectGrade; }
   void setProjectGrade(int projectGrade) { _projectGrade = projectGrade; }
 
   // Prints all student info as a string
@@ -676,10 +678,44 @@ void displayMainMenu() {
   cout << "Enter your choice: ";
 }
 
+void timingTest(vector<Student>& students) {
+    using namespace std::chrono;
+
+    // Add a large number of students
+    int largeNumber = 10000; // Adjust this number as needed
+    auto start = high_resolution_clock::now();
+    for (int i = 0; i < largeNumber; ++i) {
+        students.emplace_back("Student_" + to_string(i), "U" + to_string(100000000 + i), "student" + to_string(i) + "@usf.edu", i % 5, i % 5, i % 5);
+    }
+    auto stop = high_resolution_clock::now();
+    auto duration = duration_cast<microseconds>(stop - start);
+    cout << "Time taken to add " << largeNumber << " students: " << duration.count() << " microseconds." << endl;
+
+    // Timing for deleting a student
+    start = high_resolution_clock::now();
+    students.pop_back();  // Deleting the last added student
+    stop = high_resolution_clock::now();
+    duration = duration_cast<microseconds>(stop - start);
+    cout << "Time taken to delete a student: " << duration.count() << " microseconds." << endl;
+
+    // Timing for retrieving a student
+    string uidToFind = "U100000050"; // Example UID, adjust as necessary
+    start = high_resolution_clock::now();
+    auto it = find_if(students.begin(), students.end(), [&uidToFind](const Student& student) {
+        return student.getUID() == uidToFind;
+    });
+    stop = high_resolution_clock::now();
+    duration = duration_cast<microseconds>(stop - start);
+    cout << "Time taken to retrieve a student: " << duration.count() << " microseconds." << endl;
+}
+
+
 // Starts program by prompting user with what to do
 int main() {
   vector<Student> students;
+  students.reserve(10000);
   readFile(students, "studentsInfo.csv");
+  timingTest(students);
   int choice = 0;
 
   cout << "Welcome to the class-roll maintenance system by Team Polk!"
